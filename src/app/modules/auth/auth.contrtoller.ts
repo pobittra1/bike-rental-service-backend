@@ -12,8 +12,8 @@ const userRegister = catchAsync(async (req, res) => {
   const result = await userRegisterIntoDB(userData);
 
   sendResponse(res, {
-    statusCode: httpStatus.CREATED,
     success: true,
+    statusCode: httpStatus.CREATED,
     message: "User registered successfully",
     data: result,
   });
