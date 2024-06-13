@@ -1,7 +1,9 @@
+import jwt from "jsonwebtoken";
 import catchAsync from "../../utils/catchAsync";
 import sendResponse from "../../utils/sendResponse";
 import { authService } from "./auth.service";
 import httpStatus from "http-status";
+import config from "../../config";
 
 //destructuring service
 const { userRegisterIntoDB, loginUser } = authService;
@@ -20,14 +22,25 @@ const userRegister = catchAsync(async (req, res) => {
 });
 
 const userLogin = catchAsync(async (req, res) => {
-  const { email, password } = req.body;
+  const result = await loginUser(req.body);
+  const token = result.token;
+  const { _id, name, email, phone, address, role } = result.user;
+  // const { _id, name, email, phone, address, role } = result.user;
+  // const token = result.token;
 
-  const result = await loginUser(email, password);
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
     message: "User logged in successfully",
-    data: result,
+    token: token,
+    data: {
+      _id,
+      name,
+      email,
+      phone,
+      address,
+      role,
+    },
   });
 });
 

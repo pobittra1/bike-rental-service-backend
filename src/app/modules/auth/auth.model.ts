@@ -38,6 +38,7 @@ const userSchema = new Schema<TUser>(
   }
 );
 
+//------------middlewares start---------//
 //pre save middleware/hook: will work on create(), save()
 userSchema.pre("save", async function (next) {
   //hashing password and save into db
@@ -48,5 +49,19 @@ userSchema.pre("save", async function (next) {
   );
   next();
 });
+
+//set empty str of password after creating data
+userSchema.post("save", async function (doc, next) {
+  doc.password = "";
+  next();
+});
+//------------middlewares end---------//
+
+// userSchema.static(
+//   "isUserExistsByEmail",
+//   async function isUserExistsByEmail(email: string) {
+//     return await User.findOne({ email }).select("+password");
+//   }
+// );
 
 export const User = model<TUser>("User", userSchema);
