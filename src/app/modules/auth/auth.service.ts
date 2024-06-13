@@ -3,7 +3,7 @@ import httpStatus from "http-status";
 import AppError from "../../config/error/AppError";
 import { TLoginUser, TUser } from "./auth.interface";
 import { User } from "./auth.model";
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
 import config from "../../config";
 
 const userRegisterIntoDB = async (payload: TUser) => {
@@ -51,7 +51,47 @@ const loginUser = async (payload: TLoginUser) => {
   };
 };
 
+const getProfileFromDB = async (tokenData: JwtPayload) => {
+  const user = await User.findOne({ _id: tokenData.userId }, { password: 0 });
+  //if user not exists
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, "This user is not found !");
+  }
+  return user;
+};
+
+const updateProfileInDB = async (
+  tokenData: JwtPayload,
+  payload: Partial<TUser>
+) => {
+  const { name, phone } = payload;
+  const user = await User.findOne(
+    { _id: tokenData.userId },
+    { password: 0, createdAt: 0, updatedAt: 0, __v: 0 }
+  ).findOneAndUpdate(
+    {
+      _id: tokenData.userId,
+    },
+    {
+      name: name,
+      phone: phone,
+    },
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
+  //if user not exists
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, "This user is not found !");
+  }
+
+  return user;
+};
+
 export const authService = {
   userRegisterIntoDB,
   loginUser,
+  getProfileFromDB,
+  updateProfileInDB,
 };

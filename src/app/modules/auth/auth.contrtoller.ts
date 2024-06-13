@@ -4,9 +4,11 @@ import sendResponse from "../../utils/sendResponse";
 import { authService } from "./auth.service";
 import httpStatus from "http-status";
 import config from "../../config";
+import AppError from "../../config/error/AppError";
 
 //destructuring service
-const { userRegisterIntoDB, loginUser } = authService;
+const { userRegisterIntoDB, loginUser, getProfileFromDB, updateProfileInDB } =
+  authService;
 
 const userRegister = catchAsync(async (req, res) => {
   const userData = req.body;
@@ -44,7 +46,32 @@ const userLogin = catchAsync(async (req, res) => {
   });
 });
 
+const getProfile = catchAsync(async (req, res) => {
+  const tokenData = req.user;
+  const result = await getProfileFromDB(tokenData);
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "User profile retrieved successfully",
+    data: result,
+  });
+});
+
+const updateProfile = catchAsync(async (req, res) => {
+  const tokenData = req.user;
+  const updateData = req.body;
+  const result = await updateProfileInDB(tokenData, updateData);
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "Profile updated successfully",
+    data: result,
+  });
+});
+
 export const authController = {
   userRegister,
   userLogin,
+  getProfile,
+  updateProfile,
 };
