@@ -4,7 +4,7 @@ import { authService } from "./auth.service";
 import httpStatus from "http-status";
 
 //destructuring service
-const { userRegisterIntoDB } = authService;
+const { userRegisterIntoDB, loginUser } = authService;
 
 const userRegister = catchAsync(async (req, res) => {
   const userData = req.body;
@@ -19,6 +19,19 @@ const userRegister = catchAsync(async (req, res) => {
   });
 });
 
+const userLogin = catchAsync(async (req, res) => {
+  const { email, password } = req.body;
+
+  const result = await loginUser(email, password);
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "User logged in successfully",
+    data: result,
+  });
+});
+
 export const authController = {
   userRegister,
+  userLogin,
 };
