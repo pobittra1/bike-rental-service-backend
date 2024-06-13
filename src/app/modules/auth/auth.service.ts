@@ -2,6 +2,8 @@ import httpStatus from "http-status";
 import AppError from "../../config/error/AppError";
 import { TLoginUser, TUser } from "./auth.interface";
 import { User } from "./auth.model";
+import jwt from "jsonwebtoken";
+import config from "../../config";
 
 const userRegisterIntoDB = async (payload: TUser) => {
   const result = await User.create(payload);
@@ -27,8 +29,14 @@ const loginUser = async (email: string, password: string) => {
     userId: user._id,
     role: user.role,
   };
+  const token = jwt.sign(jwtPayload, config.jwt_access_secret as string, {
+    expiresIn: "30d",
+  });
 
-  return user;
+  return {
+    token,
+    user,
+  };
 };
 
 export const authService = {
