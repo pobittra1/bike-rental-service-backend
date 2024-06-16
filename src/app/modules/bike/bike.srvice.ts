@@ -6,6 +6,12 @@ const createBikeIntoDB = async (payload: TBike) => {
   return result;
 };
 
+const getAllBikesFromDB = async () => {
+  const result = await Bike.find({}, { __v: 0 });
+  return result;
+};
+
 export const bikeService = {
   createBikeIntoDB,
+  getAllBikesFromDB,
 };
