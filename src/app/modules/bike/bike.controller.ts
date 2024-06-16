@@ -1,7 +1,7 @@
 import httpStatus from "http-status";
 import catchAsync from "../../utils/catchAsync";
 import sendResponse from "../../utils/sendResponse";
-import { bikeService } from "./bike.srvice";
+import { bikeService } from "./bike.service";
 
 //destructuring service
 const { createBikeIntoDB, getAllBikesFromDB, updateBikeInDB, deleteBikeInDB } =
