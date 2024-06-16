@@ -37,6 +37,17 @@ const createBikeRentalsIntoDB = async (payload: TBikeRentals) => {
   return result;
 };
 
+const returnBikeToOwnerIntoDB = async (rentalsBikeId: string) => {
+  const isExistsBikeRental = BikeRentals.findById(rentalsBikeId);
+  console.log(isExistsBikeRental);
+  if (!isExistsBikeRental) {
+    throw new AppError(httpStatus.NOT_FOUND, "rentals bike is not found !");
+  }
+
+  // const startTime = new Date(isExistsBikeRental.isReturn);
+};
+
 export const bikeRentalsService = {
   createBikeRentalsIntoDB,
+  returnBikeToOwnerIntoDB,
 };

@@ -1,13 +1,10 @@
-import jwt from "jsonwebtoken";
 import httpStatus from "http-status";
 import catchAsync from "../../utils/catchAsync";
 import sendResponse from "../../utils/sendResponse";
 import { bikeRentalsService } from "./bikeRentals.service";
-import config from "../../config";
-import AppError from "../../config/error/AppError";
 
 //destructuring bike rentals service
-const { createBikeRentalsIntoDB } = bikeRentalsService;
+const { createBikeRentalsIntoDB, returnBikeToOwnerIntoDB } = bikeRentalsService;
 
 const createBikeRentals = catchAsync(async (req, res) => {
   const { userId } = req.user;
@@ -22,7 +19,22 @@ const createBikeRentals = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const returnBikeToOwner = catchAsync(async (req, res) => {
+  // const { userId } = req.user;
+  const bikeRentalsData = req.body;
+  const rentalsBikeId = req.params.id;
+  const result = await returnBikeToOwnerIntoDB(rentalsBikeId);
+  //ser userId in result.userId from token
+  // result.userId = userId;
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "Rental created successfully",
+    data: null,
+  });
+});
 
 export const bikeRentalsController = {
   createBikeRentals,
+  returnBikeToOwner,
 };
