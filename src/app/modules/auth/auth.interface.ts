@@ -1,4 +1,5 @@
 import { Model } from "mongoose";
+import { USER_ROLE } from "./auth.constant";
 
 export type TUser = {
   name: string;
@@ -13,6 +14,8 @@ export type TLoginUser = {
   email: string;
   password: string;
 };
+
+export type TUserRole = keyof typeof USER_ROLE;
 
 // export interface UserModel extends Model<TUser> {
 //   //instance methods for checking if the user exist

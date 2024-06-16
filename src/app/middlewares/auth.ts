@@ -4,6 +4,7 @@ import AppError from "../config/error/AppError";
 import httpStatus from "http-status";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import config from "../config";
+import { TUserRole } from "../modules/auth/auth.interface";
 
 declare global {
   namespace Express {
@@ -12,7 +13,7 @@ declare global {
     }
   }
 }
-const auth = () => {
+const auth = (...roleValue: TUserRole[]) => {
   //using catchAsync middleware
   return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     //get token from client
@@ -32,8 +33,16 @@ const auth = () => {
             "You are not authorized!"
           );
         }
+        const role = (decoded as JwtPayload).role;
+        if (roleValue && !roleValue.includes(role)) {
+          throw new AppError(
+            httpStatus.UNAUTHORIZED,
+            "You are not authorized!"
+          );
+        }
         //assign user as property of req
         req.user = decoded as JwtPayload;
+
         next();
       }
     );
