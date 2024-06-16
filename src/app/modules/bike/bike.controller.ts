@@ -4,7 +4,8 @@ import sendResponse from "../../utils/sendResponse";
 import { bikeService } from "./bike.srvice";
 
 //destructuring service
-const { createBikeIntoDB, getAllBikesFromDB } = bikeService;
+const { createBikeIntoDB, getAllBikesFromDB, updateBikeInDB, deleteBikeInDB } =
+  bikeService;
 
 const createBike = catchAsync(async (req, res) => {
   const bikeData = req.body;
@@ -30,7 +31,31 @@ const getAllBikes = catchAsync(async (req, res) => {
   });
 });
 
+const updateBike = catchAsync(async (req, res) => {
+  const { id: bikeId } = req.params;
+  const updateData = req.body;
+  const result = await updateBikeInDB(bikeId, updateData);
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "Bike updated successfully",
+    data: result,
+  });
+});
+const deleteBike = catchAsync(async (req, res) => {
+  const { id: bikeId } = req.params;
+  const result = await deleteBikeInDB(bikeId);
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "Bike deleted successfully",
+    data: result,
+  });
+});
+
 export const bikeController = {
   createBike,
   getAllBikes,
+  updateBike,
+  deleteBike,
 };

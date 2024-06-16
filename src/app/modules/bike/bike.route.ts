@@ -9,7 +9,7 @@ const bikeRouter = express.Router();
 //destructure validations
 const { createBikeValidationSchema } = bikeValidation;
 //destructuring controllers
-const { createBike, getAllBikes } = bikeController;
+const { createBike, getAllBikes, updateBike, deleteBike } = bikeController;
 
 //routes here
 bikeRouter.post(
@@ -23,5 +23,8 @@ bikeRouter.get(
   //auth(USER_ROLE.admin), anyone can access
   getAllBikes
 );
+
+bikeRouter.put("/:id", auth(USER_ROLE.admin), updateBike);
+bikeRouter.delete("/:id", auth(USER_ROLE.admin), deleteBike);
 
 export default bikeRouter;
