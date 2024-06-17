@@ -4,7 +4,11 @@ import sendResponse from "../../utils/sendResponse";
 import { bikeRentalsService } from "./bikeRentals.service";
 
 //destructuring bike rentals service
-const { createBikeRentalsIntoDB, returnBikeToOwnerIntoDB } = bikeRentalsService;
+const {
+  createBikeRentalsIntoDB,
+  returnBikeToOwnerIntoDB,
+  getAllRentalsFromDB,
+} = bikeRentalsService;
 
 const createBikeRentals = catchAsync(async (req, res) => {
   const { userId } = req.user;
@@ -33,7 +37,18 @@ const returnBikeToOwner = catchAsync(async (req, res) => {
   });
 });
 
+const getAllRentals = catchAsync(async (req, res) => {
+  const result = await getAllRentalsFromDB();
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "Rentals retrieved successfully",
+    data: result,
+  });
+});
+
 export const bikeRentalsController = {
   createBikeRentals,
   returnBikeToOwner,
+  getAllRentals,
 };

@@ -9,7 +9,8 @@ const bikeRentalsRouter = express.Router();
 //destructure validations
 const { createBikeRentalsValidationSchema } = bikeRentalsValidation;
 //destructuring controllers
-const { createBikeRentals, returnBikeToOwner } = bikeRentalsController;
+const { createBikeRentals, returnBikeToOwner, getAllRentals } =
+  bikeRentalsController;
 
 //routes here
 bikeRentalsRouter.post(
@@ -19,5 +20,6 @@ bikeRentalsRouter.post(
   createBikeRentals
 );
 bikeRentalsRouter.put("/:id/return", auth(USER_ROLE.admin), returnBikeToOwner);
+bikeRentalsRouter.get("/", auth(USER_ROLE.user), getAllRentals);
 
 export default bikeRentalsRouter;
