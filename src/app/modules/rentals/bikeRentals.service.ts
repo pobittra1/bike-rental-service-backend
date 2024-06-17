@@ -45,8 +45,12 @@ const returnBikeToOwnerIntoDB = async (rentalsBikeId: string) => {
     throw new AppError(httpStatus.NOT_FOUND, "rentals bike is not found !");
   }
   const { bikeId } = isExistsBikeRental;
+  //if isReturn true that mean bike availablity true. so throw an error
   if (isExistsBikeRental.isReturned) {
-    throw new AppError(httpStatus.NOT_FOUND, "Bike is already returned");
+    throw new AppError(
+      httpStatus.NOT_FOUND,
+      "this bike already return or available to rental"
+    );
   }
   //start time convert into date time
   const startTime = new Date(isExistsBikeRental.startTime);
@@ -68,8 +72,36 @@ const returnBikeToOwnerIntoDB = async (rentalsBikeId: string) => {
   // Store ISO string in RentalsBike model to date
   isExistsBikeRental.returnTime = returnTime.toISOString();
   isExistsBikeRental.totalCost = rentalDurationInHour * pricePerHour;
+  //set isReturned true when bike is return
+  //in response
   isExistsBikeRental.isReturned = true;
-
+  //in bike rentals model
+  await BikeRentals.findOneAndUpdate(
+    {
+      bikeId: bikeId,
+    },
+    {
+      isReturned: true,
+    },
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
+  //set false for is available bike
+  // isBikeIdExists.isAvailable = false;
+  await Bike.findByIdAndUpdate(
+    {
+      _id: bikeId,
+    },
+    {
+      isAvailable: true,
+    },
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
   return isExistsBikeRental;
 };
 
