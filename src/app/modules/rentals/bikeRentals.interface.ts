@@ -4,7 +4,7 @@ export type TBikeRentals = {
   userId?: string;
   bikeId: Types.ObjectId;
   startTime: string;
-  returnTime: boolean;
+  returnTime: string;
   totalCost: number;
   isReturned: boolean;
 };

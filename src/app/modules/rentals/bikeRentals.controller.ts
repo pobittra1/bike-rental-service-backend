@@ -20,17 +20,16 @@ const createBikeRentals = catchAsync(async (req, res) => {
   });
 });
 const returnBikeToOwner = catchAsync(async (req, res) => {
-  // const { userId } = req.user;
-  const bikeRentalsData = req.body;
+  const { userId } = req.user;
   const rentalsBikeId = req.params.id;
   const result = await returnBikeToOwnerIntoDB(rentalsBikeId);
-  //ser userId in result.userId from token
-  // result.userId = userId;
+  //set userId in result.userId from token
+  result.userId = userId;
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
-    message: "Rental created successfully",
-    data: null,
+    message: "Bike returned successfully",
+    data: result,
   });
 });
 

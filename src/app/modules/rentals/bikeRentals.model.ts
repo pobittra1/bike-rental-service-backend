@@ -14,7 +14,7 @@ const CreateBikeRentalsSchema = new Schema<TBikeRentals>(
       type: String,
     },
     returnTime: {
-      type: Boolean,
+      type: String,
       default: null,
     },
     totalCost: {
