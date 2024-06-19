@@ -16,12 +16,14 @@ declare global {
 const auth = (...roleValue: TUserRole[]) => {
   //using catchAsync middleware
   return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    //get token from client
-    const token = req.headers.authorization;
+    //get token with bearer from client
+    const tokenWithBearer = req.headers.authorization;
     // checking if the token is missing
-    if (!token) {
+    if (!tokenWithBearer) {
       throw new AppError(httpStatus.UNAUTHORIZED, "You are not authorized!");
     }
+    //split token from bearer
+    const token = tokenWithBearer.split(" ")[1];
     //check if the token is valid
     jwt.verify(
       token,
