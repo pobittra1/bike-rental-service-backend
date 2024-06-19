@@ -2,6 +2,7 @@ import httpStatus from "http-status";
 import AppError from "../../config/error/AppError";
 import { TBike } from "./bike.interface";
 import { Bike } from "./bike.model";
+import sendResponse from "../../utils/sendResponse";
 
 const createBikeIntoDB = async (payload: TBike) => {
   const result = await Bike.create(payload);
@@ -10,6 +11,7 @@ const createBikeIntoDB = async (payload: TBike) => {
 
 const getAllBikesFromDB = async () => {
   const result = await Bike.find({}, { __v: 0 });
+
   return result;
 };
 

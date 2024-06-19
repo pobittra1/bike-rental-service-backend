@@ -53,6 +53,9 @@ const loginUser = async (payload: TLoginUser) => {
 
 const getProfileFromDB = async (tokenData: JwtPayload) => {
   const user = await User.findOne({ _id: tokenData.userId }, { password: 0 });
+  //error handling part-01
+  //if data not available, show error
+  //if(user.length === 0)
   //if user not exists
   if (!user) {
     throw new AppError(httpStatus.NOT_FOUND, "This user is not found !");
