@@ -2,6 +2,8 @@ import httpStatus from "http-status";
 import catchAsync from "../../utils/catchAsync";
 import sendResponse from "../../utils/sendResponse";
 import { bikeRentalsService } from "./bikeRentals.service";
+import { ReturnBikeRentals } from "./bikeRentals.model";
+import { TBikeRentals } from "./bikeRentals.interface";
 
 //destructuring bike rentals service
 const {
@@ -29,6 +31,16 @@ const returnBikeToOwner = catchAsync(async (req, res) => {
   const result = await returnBikeToOwnerIntoDB(rentalsBikeId);
   //set userId in result.userId from token
   result.userId = userId;
+  //await ReturnBikeRentals.create(result);
+  const payload: TBikeRentals = {
+    userId,
+    bikeId: result.bikeId,
+    startTime: result.startTime,
+    returnTime: result.returnTime,
+    totalCost: result.totalCost,
+    isReturned: result.isReturned,
+  };
+  await ReturnBikeRentals.create(payload);
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,

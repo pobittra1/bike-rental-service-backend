@@ -1,7 +1,7 @@
 import httpStatus from "http-status";
 import AppError from "../../config/error/AppError";
 import { TBikeRentals } from "./bikeRentals.interface";
-import { BikeRentals } from "./bikeRentals.model";
+import { BikeRentals, ReturnBikeRentals } from "./bikeRentals.model";
 import { Bike } from "../bike/bike.model";
 
 const createBikeRentalsIntoDB = async (payload: TBikeRentals) => {
@@ -42,7 +42,10 @@ const returnBikeToOwnerIntoDB = async (rentalsBikeId: string) => {
     rentalsBikeId
   )) as TBikeRentals;
   if (!isExistsBikeRental) {
-    throw new AppError(httpStatus.NOT_FOUND, "rentals bike is not found !");
+    throw new AppError(
+      httpStatus.NOT_FOUND,
+      "return rentals bike is not found !"
+    );
   }
   const { bikeId } = isExistsBikeRental;
   //if isReturn true that mean bike availablity true. so throw an error
@@ -102,11 +105,17 @@ const returnBikeToOwnerIntoDB = async (rentalsBikeId: string) => {
       runValidators: true,
     }
   );
+  //const result = await ReturnBikeRentals.create(isExistsBikeRental);
+  // isExistsBikeRental.aggregate([
+  //   { $match: { name: /data/ } },
+  //   { $out: "newColl" },
+  // ]);
+
   return isExistsBikeRental;
 };
 
 const getAllRentalsFromDB = async () => {
-  const result = await BikeRentals.find();
+  const result = await ReturnBikeRentals.find();
   return result;
 };
 
