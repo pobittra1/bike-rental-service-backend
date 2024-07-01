@@ -2,6 +2,7 @@ import { Schema, model } from "mongoose";
 import { TLoginUser, TUser } from "./auth.interface";
 import bcrypt from "bcrypt";
 import config from "../../config";
+import * as argon2 from "argon2";
 
 const userSchema = new Schema<TUser>(
   {
@@ -43,9 +44,9 @@ const userSchema = new Schema<TUser>(
 userSchema.pre("save", async function (next) {
   //hashing password and save into db
   const user = this;
-  user.password = await bcrypt.hash(
-    user.password,
-    Number(config.bcrypt_salt_rounds)
+  user.password = await argon2.hash(
+    user.password
+    // Number(config.bcrypt_salt_rounds)
   );
   next();
 });

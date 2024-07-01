@@ -5,6 +5,7 @@ import { TLoginUser, TUser } from "./auth.interface";
 import { User } from "./auth.model";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import config from "../../config";
+import * as argon2 from "argon2";
 
 const userRegisterIntoDB = async (payload: TUser) => {
   const result = await User.create(payload);
@@ -18,6 +19,7 @@ const loginUser = async (payload: TLoginUser) => {
     { email: payload?.email },
     { createdAt: 0, updatedAt: 0, __v: 0 }
   );
+
   if (!user) {
     throw new AppError(httpStatus.NOT_FOUND, "This user is not found !");
   }
@@ -27,9 +29,13 @@ const loginUser = async (payload: TLoginUser) => {
   // }
 
   //checking if the password is correct or incorrect with bcrypt password
-  const isPasswordMatched = await bcrypt.compare(
-    payload?.password,
-    user?.password
+  // const isPasswordMatched = await bcrypt.compare(
+  //   payload?.password,
+  //   user?.password
+  // );
+  const isPasswordMatched = await argon2.verify(
+    user?.password,
+    payload?.password
   );
   if (!isPasswordMatched) {
     throw new AppError(httpStatus.FORBIDDEN, "Password do not matched");
@@ -44,7 +50,6 @@ const loginUser = async (payload: TLoginUser) => {
   const token = jwt.sign(jwtPayload, config.jwt_access_secret as string, {
     expiresIn: "30d",
   });
-
   return {
     token,
     user,

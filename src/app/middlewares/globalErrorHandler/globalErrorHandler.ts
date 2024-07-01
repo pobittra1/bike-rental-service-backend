@@ -11,7 +11,6 @@ const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
   //setting default values
   let statusCode = 500;
   let message = "something went wrong";
-
   let errorSources: TErrorSource = [
     {
       path: "",
